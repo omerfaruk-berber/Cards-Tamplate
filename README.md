@@ -1,82 +1,82 @@
-# Game Template – Çok Amaçlı Oyun Şablonu
+# Game Template – Multi-Purpose Game Template
 
-Bu proje, farklı oyun türlerine uyarlanabilecek şekilde tasarlanmış, modüler ve genişletilebilir bir hazır oyun şablonudur. Hem hikâye tabanlı bir deneyim hem de klasik bir kutu oyunu mantığında kullanılabilecek esnek bir altyapı sunar.
+This project is a modular and extensible ready-made game template designed to be adapted to different game genres. It offers a flexible framework that can be used for both story-driven experiences and classic board games.
 
-## 🛠️ İçerik
+## 🛠️ Contents
 
-Şablon aşağıdaki temel sistemleri içerir:
+The template includes the following core systems:
 
-- Başlangıç Kartları
+- Start Cards
 
-- Özelleştirilebilir Kartlar
+- Customisable Cards
 
-- Bitiş Kartları
+- End Cards
 
 <img src="Orther/Screen1.png" align="right" width="300"/>
 
-- Hile Kartları
+- Cheat Cards
 
-- Ayarlar Menüsü
+- Settings Menu
 
-- İndirme Sistemi
+- Download System
 
-- Bildirme (Raporlama) Sistemi
+- Reporting System
 
-Bu yapı sayesinde oyunun akışını tamamen ihtiyacınıza göre şekillendirebilirsiniz.
+Thanks to this structure, you can shape the flow of the game entirely according to your needs.
 
-## ⚡UI Tasarımları
+## ⚡ UI Designs
 
-En üst Panel Oyunumuzda Geçirdiğimiz zamanı veya tercih olarak gerçek zamanı gösterebilen bir özelliğe sahiptir. 
+The top panel features a function that can display either the time spent in the game or real time, depending on your preference.
 
-Sol Tarafındaki Buton Ayarlar Menüsünü Açar.
+The button on the left opens the Settings Menu.
 
-Sağ Taraftaki buton ise Ekranda ki mevcut kartı indirir. 
+The button on the right downloads the current card displayed on the screen.
 
-Son olarakta da Ortada Kartlarımız bulunur.
+Finally, the cards are displayed in the centre.
 
-## Kullanım Senaryoları
+## Use Cases
 
-Bu şablon farklı konseptlere adapte edilebilir:
+This template can be adapted to different concepts:
 
-- Hikâye Tabanlı Oyun
+- Story-based games
 
-- Eğitim veya Simülasyon Tabanlı Kart Oyunları
+- Educational or simulation-based card games
 
-- Mekanik Odaklı Mini Oyun Yapıları
+- Mechanics-focused mini-game structures
 
-Esnek sahne yapısı sayesinde farklı kullanım senaryolarına hızlı geçiş yapabilirsiniz.
+Thanks to the flexible scene structure, you can quickly switch between different use cases.
 
-## Sahne Yapısı
+## Scene Structure
 
-Projede, kullanım kolaylığı sağlamak amacıyla birden fazla sahne tasarlanmıştır.
+Multiple scenes have been designed within the project to ensure ease of use.
 
-Her sahneye ait kart prefab’ları:
+Card prefabs for each scene:
 
-Assets/ Prefabs/ [SahneAdı]/ İlgili Kart Prefab’ları
+Assets/ Prefabs/ [SceneName]/ Relevant Card Prefabs
 
-Klasör isimleri sahne isimleriyle birebir uyumludur. Bu sayede hangi prefab’ın hangi sahneye ait olduğunu kolayca yönetebilirsiniz.
+The folder names correspond exactly to the scene names. This makes it easy to manage which prefab belongs to which scene.
 
-## ✒️ Özelleştirme
+## ✒️ Customisation
 
-Kart içerikleri ve mekanikleri genişletilebilir yapıdadır.
-Yeni kart türleri kolayca eklenebilir.
-Sahne bazlı düzenleme yapılarak farklı oyun modları oluşturulabilir.
-UI ve akış sistemi projeye göre yeniden düzenlenebilir.
+Card content and mechanics are designed to be extensible.
+New card types can be easily added.
+Different game modes can be created by editing on a scene-by-scene basis.
+The UI and flow system can be reorganised according to the project.
 
-## 📘 Kullanım Kılavuzu
+## 📘 User Guide
 
-Detaylı kullanım kılavuzuna aşağıdaki bağlantıdan ulaşabilirsiniz:
+You can access the detailed user guide via the link below:
 
-👉 Kullanım Kılavuzu:
-(Buraya indirme linki eklenecek)
+👉 User Guide:
+(Download link to be added here)
 
-## 📜 Lisans & Ticari Kullanım
+## 📜 Licence & Commercial Use
 
-Projede bazı bölümlerde geliştirici imzası bulunmaktadır.
+The developer’s signature appears in certain sections of the project.
 
-Ticari projelerde kullanıma açığım. Ancak ticari kullanım öncesinde lütfen benimle iletişime geçiniz.
+I am open to its use in commercial projects. However, please contact me before using it for commercial purposes.
 
-## 🤝 Katkı ve Geri Bildirim
+## 🤝 Contributions and Feedback
 
-Görüş, öneri ve katkılarınızı memnuniyetle karşılıyorum.
-Projeyi geliştirmenize ve kendi vizyonunuza uyarlamanıza destek olmayı isterim.
+I welcome your views, suggestions and contributions.
+I would like to support you in developing the project and adapting it to your own vision.
