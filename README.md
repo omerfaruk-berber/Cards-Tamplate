@@ -63,12 +63,6 @@ New card types can be easily added.
 Different game modes can be created by editing on a scene-by-scene basis.
 The UI and flow system can be reorganised according to the project.
 
-## 📘 User Guide
-
-You can access the detailed user guide via the link below:
-
-👉 User Guide:
-(Download link to be added here)
 
 ## 📜 Licence & Commercial Use
 
