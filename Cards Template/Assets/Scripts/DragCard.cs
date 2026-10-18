@@ -33,6 +33,8 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     CanvasGroup canvasGroup;
     Vector2 lastDragVelocity = Vector2.zero;
     bool isEntering = true;
+    bool isDragging;
+    bool isReturning;
     UIAnimator animator;
     Vector2 yesFixedAnchoredPos;
     Vector2 noFixedAnchoredPos;
@@ -90,8 +92,9 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // Eğer giriş animasyonu devam ediyorsa sürüklememi engelle
-        if (isEntering) return;
+        if (isEntering || isReturning || canvas == null) return;
+
+        isDragging = true;
         
         canvasGroup.blocksRaycasts = false;
         // Kartı tuttuğunda önce ses çalmayacağız; bırakma anında çalmak için hareket etmeyiz
@@ -100,8 +103,7 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (canvas == null) return;
-        if (isEntering) return;
+        if (!isDragging || canvas == null) return;
         
         Vector2 delta = eventData.delta / canvas.scaleFactor;
         rt.anchoredPosition += new Vector2(delta.x, delta.y);
@@ -148,11 +150,13 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             }
         }
         
-        Debug.Log($"OnDrag: {gameObject.name} pos={rt.anchoredPosition}");
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!isDragging) return;
+
+        isDragging = false;
         canvasGroup.blocksRaycasts = true;
         float dx = rt.anchoredPosition.x - startAnchoredPos.x;
         Debug.Log($"OnEndDrag: {gameObject.name} dx={dx}");
@@ -232,6 +236,7 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     IEnumerator ReturnToOrigin()
     {
+        isReturning = true;
         float t = 0f;
         Vector2 from = rt.anchoredPosition;
         Quaternion fromRot = rt.localRotation;
@@ -268,6 +273,8 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         {
             noText.alpha = 0;
         }
+
+        isReturning = false;
     }
 
     void DetachTextIfNeeded(TextMeshProUGUI text, ref Vector2 cachedAnchoredPos)

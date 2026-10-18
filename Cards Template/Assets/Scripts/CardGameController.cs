@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Hile kartı yapısı - ID ve prefab içerir
+/// Cheat card data - contains an ID and a prefab
 /// </summary>
 [System.Serializable]
 public class CheatCard
@@ -13,16 +13,16 @@ public class CheatCard
 
 public class CardGameController : MonoBehaviour
 {
-    [Header("Kart Prefab'leri")]
+    [Header("Card Prefabs")]
     public GameObject startCardPrefab;
     public List<GameObject> anaCardPrefabs = new List<GameObject>();
     public GameObject endCardPrefab;
 
-    [Header("Özel Kartlar")]
-    public GameObject optionsCardPrefab; // Options (durdurma) kartı - tek prefab
-    public List<CheatCard> cheatCardPrefabs = new List<CheatCard>(); // Hile kartları - numaralı liste
+    [Header("Special Cards")]
+    public GameObject optionsCardPrefab; // Options (pause) card - single prefab
+    public List<CheatCard> cheatCardPrefabs = new List<CheatCard>(); // Cheat cards - numbered list
 
-    [Header("Ayarlar")]
+    [Header("Settings")]
     public RectTransform spawnPoint;
 
     private Stack<GameObject> cardStack = new Stack<GameObject>();
@@ -33,21 +33,21 @@ public class CardGameController : MonoBehaviour
     {
         if (spawnPoint == null)
         {
-            Debug.LogError("Spawn Point atanmadı!");
+            Debug.LogError("Spawn Point is not assigned!");
             return;
         }
-        // Arka plan müzik başlat
+        // Start background music
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayBackgroundMusic();
 
-        // Başlangıç kartını göster
+        // Show the start card
         if (startCardPrefab != null)
         {
             SpawnCardOfType(startCardPrefab, CardType.StartGame);
         }
         else
         {
-            Debug.LogWarning("Başlangıç kartı prefab'i atanmadı!");
+            Debug.LogWarning("Start card prefab is not assigned!");
         }
     }
 
@@ -68,10 +68,10 @@ public class CardGameController : MonoBehaviour
         if (dragCard != null)
         {
             dragCard.cardType = cardType;
-            // Listener'ları temizle
+            // Clear existing listeners
             dragCard.onYes.RemoveAllListeners();
             dragCard.onNo.RemoveAllListeners();
-            // Yeni listener'ları ekle
+            // Add the new listeners
             dragCard.onYes.AddListener(() => OnCardSwiped(cardType, true));
             dragCard.onNo.AddListener(() => OnCardSwiped(cardType, false));
         }
@@ -81,17 +81,17 @@ public class CardGameController : MonoBehaviour
 
     private void OnCardSwiped(CardType cardType, bool isYes)
     {
-        Debug.Log($"Kart kaydırıldı: {cardType} - Yön: {(isYes ? "SAĞA (Evet)" : "SOLA (Hayır)")}");
+        Debug.Log($"Card swiped: {cardType} - Direction: {(isYes ? "RIGHT (Yes)" : "LEFT (No)")}");
 
         switch (cardType)
         {
             case CardType.StartGame:
-                // Başlangıç kartı sadece bir kez tetiklenmeli
+                // The start card should only be triggered once
                 if (!gameStarted && isYes)
                 {
                     gameStarted = true;
                     
-                    Debug.Log("Play kartı kabul edildi - UI güncelleştirildi");
+                    Debug.Log("Play card accepted - UI updated");
                     ShowNextAnaCard();
                 }
                 break;
@@ -101,15 +101,15 @@ public class CardGameController : MonoBehaviour
                 break;
 
             case CardType.Pause:
-                Debug.Log("Durdurma kartı kaydırıldı!");
+                Debug.Log("Pause card swiped!");
                 break;
 
             case CardType.Cheat:
-                Debug.Log("Hile kartı kullanıldı!");
+                Debug.Log("Cheat card used!");
                 break;
 
             case CardType.EndGame:
-                Debug.Log("Oyun bitti!");
+                Debug.Log("Game over!");
                 break;
 
             default:
@@ -127,19 +127,19 @@ public class CardGameController : MonoBehaviour
         }
         else
         {
-            // Tüm kartlar bitti
+            // All cards have been shown
             if (endCardPrefab != null)
             {
                 SpawnCardOfType(endCardPrefab, CardType.EndGame);
             }
             else
             {
-                Debug.Log("Oyun bitti! Son kart prefab'i atanmadı.");
+                Debug.Log("Game over! The end card prefab is not assigned.");
             }
         }
     }
 
-    // Options kartı spawn etmek için
+    // Spawn the options card
     public void SpawnOptionsCard()
     {
         Debug.Log("SpawnOptionsCard called");
@@ -149,25 +149,31 @@ public class CardGameController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("SpawnOptionsCard: Options Card Prefab atanmadı!");
+            Debug.LogWarning("SpawnOptionsCard: Options card prefab is not assigned!");
         }
     }
 
-    // Hile kartı spawn etmek için - ID'ye göre seç
+    // Spawn a cheat card selected by ID
     public void SpawnCheatCard(int cheatId)
     {
         Debug.Log($"SpawnCheatCard called with ID: {cheatId}");
         
-        CheatCard selectedCheat = cheatCardPrefabs.Find(c => c.cheatId == cheatId);
+        if (cheatCardPrefabs == null)
+        {
+            Debug.LogWarning("SpawnCheatCard: Cheat card list is not assigned!");
+            return;
+        }
+
+        CheatCard selectedCheat = cheatCardPrefabs.Find(c => c != null && c.cheatId == cheatId);
         
         if (selectedCheat != null && selectedCheat.cardPrefab != null)
         {
             SpawnCardOfType(selectedCheat.cardPrefab, CardType.Cheat);
-            Debug.Log($"Hile kartı #{cheatId} spawn edildi");
+            Debug.Log($"Cheat card #{cheatId} spawned");
         }
         else
         {
-            Debug.LogWarning($"SpawnCheatCard: Hile kartı ID #{cheatId} bulunamadı!");
+            Debug.LogWarning($"SpawnCheatCard: Cheat card with ID #{cheatId} was not found!");
         }
     }
 

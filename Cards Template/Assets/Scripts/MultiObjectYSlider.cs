@@ -19,12 +19,18 @@ public class MultiObjectYSlider : MonoBehaviour
     [SerializeField] private float stepPixels = 20f;
 
     private readonly List<Vector3> basePositions = new List<Vector3>();
+    private float defaultSliderValue;
 
     private void Awake()
     {
         if (slider == null)
         {
             slider = GetComponent<Slider>();
+        }
+
+        if (slider != null)
+        {
+            defaultSliderValue = slider.value;
         }
 
         if (autoFindByName)
@@ -172,5 +178,16 @@ public class MultiObjectYSlider : MonoBehaviour
         {
             HandleSliderChanged(slider.value);
         }
+    }
+
+    public void ResetToDefault()
+    {
+        if (slider == null)
+        {
+            return;
+        }
+
+        slider.SetValueWithoutNotify(defaultSliderValue);
+        HandleSliderChanged(slider.value);
     }
 }

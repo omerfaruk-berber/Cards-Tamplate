@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 /// <summary>
-/// Bildirim sistemi yöneticisi (Singleton Pattern)
-/// Toast notification prefab'larını spawn eder ve yönetir.
+/// Manages the notification system using the singleton pattern.
+/// Spawns and manages toast notification prefabs.
 /// </summary>
 public class NotificationManager : MonoBehaviour
 {
     public static NotificationManager Instance { get; private set; }
 
     [SerializeField] private GameObject toastNotificationPrefab;
-    [SerializeField] private Transform notificationContainer; // Canvas içinde bildirim konumu
+    [SerializeField] private Transform notificationContainer; // Notification position within the Canvas
     [SerializeField] private int maxNotificationsOnScreen = 3;
     [SerializeField] private float verticalSpacing = 10f;
-    [Header("Renk Ayarları")]
-    [Tooltip("Başarı (success) bildirimi arka plan rengi (HTML hex, örn. #2AA24A)")]
+    [Header("Color Set")]
+    [Tooltip("Background color for success notifications (HTML hex, e.g. #2AA24A)")]
     [SerializeField] private string successColorHex = "#287a3e";
 
-    private Queue<GameObject> activeNotifications = new Queue<GameObject>();
+    private List<GameObject> activeNotifications = new List<GameObject>();
 
     private void Awake()
     {
@@ -31,7 +31,7 @@ public class NotificationManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Eğer container belirtilmemişse, Canvas'i bul ve otomatik bir notification container oluştur
+        // If no container is assigned, find a Canvas and create a notification container
         if (notificationContainer == null)
         {
             Canvas canvas = FindAnyObjectByType<Canvas>();
@@ -68,25 +68,25 @@ public class NotificationManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Bildirim göster
+    /// Shows a notification.
     /// </summary>
     public void ShowNotification(string message, float duration = 3f, Color? backgroundColor = null)
     {
         if (toastNotificationPrefab == null)
         {
-            Debug.LogError("[NotificationManager] Toast Notification Prefab atanmadı!");
+            Debug.LogError("[NotificationManager] Toast notification prefab is not assigned!");
             return;
         }
 
         if (notificationContainer == null)
         {
-            Debug.LogError("[NotificationManager] Notification Container atanmadı!");
+            Debug.LogError("[NotificationManager] Notification container is not assigned!");
             return;
         }
 
-        // Prefab'ı spawn et (local transform korunarak)
+        // Spawn the prefab while preserving its local transform
         GameObject notificationObj = Instantiate(toastNotificationPrefab, notificationContainer, false);
-        // Yeni bildirim en üstte gözüksün
+        // Show the newest notification at the top
         notificationObj.transform.SetAsFirstSibling();
 
         Debug.Log($"[NotificationManager] Showing notification: {message}");
@@ -97,21 +97,23 @@ public class NotificationManager : MonoBehaviour
             notification.Initialize(message, duration, backgroundColor);
         }
 
-        activeNotifications.Enqueue(notificationObj);
+        activeNotifications.Add(notificationObj);
 
-        // Maksimum bildirim sayısını aşarsak en eskisini sil
-        if (activeNotifications.Count > maxNotificationsOnScreen)
+        // Remove the oldest notification when the screen limit is exceeded
+        if (activeNotifications.Count > Mathf.Max(0, maxNotificationsOnScreen))
         {
-            GameObject oldestNotification = activeNotifications.Dequeue();
-            Destroy(oldestNotification);
+            GameObject oldestNotification = activeNotifications[0];
+            activeNotifications.RemoveAt(0);
+            if (oldestNotification != null)
+                Destroy(oldestNotification);
         }
 
-        // Bildirim yok olduğunda kuyruktan çıkar
+        // Remove the notification from the active list when it expires
         StartCoroutine(RemoveNotificationAfterDuration(notificationObj, duration));
     }
 
     /// <summary>
-    /// Başarı bildirim göster (yeşil)
+    /// Shows a success notification (green).
     /// </summary>
     public void ShowSuccess(string message, float duration = 3f)
     {
@@ -123,32 +125,32 @@ public class NotificationManager : MonoBehaviour
         }
         else
         {
-            ShowNotification(message, duration, new Color(0.2f, 0.8f, 0.2f, 0.9f)); // fallback
+            ShowNotification(message, duration, new Color(0.2f, 0.8f, 0.2f, 0.9f)); // Fallback color
         }
     }
 
     /// <summary>
-    /// Hata bildirim göster (kırmızı)
+    /// Shows an error notification (red).
     /// </summary>
     public void ShowError(string message, float duration = 3f)
     {
-        ShowNotification(message, duration, new Color(0.9f, 0.2f, 0.2f, 0.9f)); // Kırmızı
+        ShowNotification(message, duration, new Color(0.9f, 0.2f, 0.2f, 0.9f)); // Red
     }
 
     /// <summary>
-    /// Bilgi bildirim göster (mavi)
+    /// Shows an informational notification (blue).
     /// </summary>
     public void ShowInfo(string message, float duration = 3f)
     {
-        ShowNotification(message, duration, new Color(0.2f, 0.6f, 0.9f, 0.9f)); // Mavi
+        ShowNotification(message, duration, new Color(0.2f, 0.6f, 0.9f, 0.9f)); // Blue
     }
 
     /// <summary>
-    /// Uyarı bildirim göster (turuncu)
+    /// Shows a warning notification (orange).
     /// </summary>
     public void ShowWarning(string message, float duration = 3f)
     {
-        ShowNotification(message, duration, new Color(1f, 0.6f, 0.2f, 0.9f)); // Turuncu
+        ShowNotification(message, duration, new Color(1f, 0.6f, 0.2f, 0.9f)); // Orange
     }
 
     private System.Collections.IEnumerator RemoveNotificationAfterDuration(GameObject notification, float duration)
@@ -157,5 +159,7 @@ public class NotificationManager : MonoBehaviour
 
         if (notification != null)
             Destroy(notification);
+
+        activeNotifications.Remove(notification);
     }
 }

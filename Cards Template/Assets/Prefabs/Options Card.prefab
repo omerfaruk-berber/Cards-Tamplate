@@ -2315,7 +2315,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 28378530296322823}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4380475089298240571}
+        m_TargetAssemblyTypeName: OptionsManager, Assembly-CSharp
+        m_MethodName: ResetSettings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5486824024778372442
 GameObject:
   m_ObjectHideFlags: 0
@@ -3912,11 +3924,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1595954413210461152, guid: b1fb69ea3c490464bb5d90445f401ec8, type: 3}
       propertyPath: m_Size
-      value: 0.44847393
+      value: 0.47522116
       objectReference: {fileID: 0}
     - target: {fileID: 1595954413210461152, guid: b1fb69ea3c490464bb5d90445f401ec8, type: 3}
       propertyPath: m_Value
-      value: 1.0366726
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3673984786747747311, guid: b1fb69ea3c490464bb5d90445f401ec8, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3940,7 +3952,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3972466106678288250, guid: b1fb69ea3c490464bb5d90445f401ec8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -29.500097
+      value: 0.00009626697
       objectReference: {fileID: 0}
     - target: {fileID: 7364524095518614572, guid: b1fb69ea3c490464bb5d90445f401ec8, type: 3}
       propertyPath: m_Pivot.x

@@ -48,6 +48,29 @@ public class OptionsManager : MonoBehaviour
         timeDisplay.TogglePlayTime(showPlayTime);
     }
 
+    public void ResetSettings()
+    {
+        PlayerPrefs.DeleteKey(TimeDisplayModeKey);
+        PlayerPrefs.Save();
+
+        MultiObjectYSlider[] ySliders = FindObjectsByType<MultiObjectYSlider>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+        foreach (MultiObjectYSlider ySlider in ySliders)
+        {
+            if (ySlider != null)
+            {
+                ySlider.ResetToDefault();
+            }
+        }
+
+        if (timeDisplay == null)
+            return;
+
+        timeDisplay.TogglePlayTime(false);
+        timeDisplay.SetPlayTimeFormat(TimeDisplay.PlayTimeFormat.Hour_Minute_Second);
+    }
+
     // Oyun süresi formatını Saat:Dakika:Saniye olarak ayarlar
     public void SetFormatHourMinuteSecond()
     {
