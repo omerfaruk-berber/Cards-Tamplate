@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Ses yönetim sistemi (Singleton Pattern)
-/// Tüm oyun seslerini ve müzik kontrol eder.
+/// Audio management system (Singleton Pattern)
+/// Controls all game sounds and music.
 /// </summary>
 public class AudioManager : MonoBehaviour
 {
@@ -14,24 +14,24 @@ public class AudioManager : MonoBehaviour
     public class SoundGroup
     {
         public string soundName;
-        [Tooltip("Bu ses grubuna ait tüm varyantlar")]
+        [Tooltip("All variants belonging to this sound group")]
         public List<AudioClip> clips = new List<AudioClip>();
         public float volume = 1f;
-        [Range(0f, 1f)] public float pitchVariation = 0.1f; // Pitch değişim miktarı
+        [Range(0f, 1f)] public float pitchVariation = 0.1f; // Amount of pitch variation
     }
 
     [System.Serializable]
     public class BackgroundMusicClip
     {
         public AudioClip clip;
-        [Tooltip("Müzik bittikten sonra sonraki müziğe geçmeden önce bekleme süresi (saniye)")] 
+        [Tooltip("Wait time (seconds) before moving to the next track after the music ends")]
         public float delayBetweenTracks = 0f;
     }
 
     [SerializeField] private List<SoundGroup> soundEffects = new List<SoundGroup>();
     [SerializeField] private List<BackgroundMusicClip> backgroundMusicList = new List<BackgroundMusicClip>();
     [SerializeField] private float backgroundMusicVolume = 0.5f;
-    [SerializeField] private bool randomizeMusic = false; // Müzikleri rastgele çal
+    [SerializeField] private bool randomizeMusic = false; // Play tracks in a random order
 
     private AudioSource sfxAudioSource;
     private AudioSource musicAudioSource;
@@ -51,26 +51,26 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // AudioSource componentleri oluştur
+        // Create AudioSource components
         CreateAudioSources();
     }
 
     private void CreateAudioSources()
     {
-        // Ses efektleri için AudioSource
+        // AudioSource for sound effects
         sfxAudioSource = gameObject.AddComponent<AudioSource>();
         sfxAudioSource.playOnAwake = false;
         sfxAudioSource.volume = 1f;
 
-        // Müzik için AudioSource
+        // AudioSource for music
         musicAudioSource = gameObject.AddComponent<AudioSource>();
         musicAudioSource.playOnAwake = false;
-        musicAudioSource.loop = false; // Loop'u kapat, biz yönetiriz
+        musicAudioSource.loop = false; // Disable looping; playback is managed here
         musicAudioSource.volume = backgroundMusicVolume;
     }
 
     /// <summary>
-    /// Ses efekti oynat (rastgele varyant seçer)
+    /// Play a sound effect (selects a random variant)
     /// </summary>
     public void PlaySound(string soundName)
     {
@@ -78,40 +78,40 @@ public class AudioManager : MonoBehaviour
 
         if (soundGroup == null || soundGroup.clips.Count == 0)
         {
-            Debug.LogWarning($"[AudioManager] Ses bulunamadı veya hiç varyantı yok: {soundName}");
+            Debug.LogWarning($"[AudioManager] Sound not found or has no variants: {soundName}");
             return;
         }
 
-        // Rastgele bir varyant seç
+        // Select a random variant
         AudioClip selectedClip = soundGroup.clips[Random.Range(0, soundGroup.clips.Count)];
 
         if (selectedClip == null)
         {
-            Debug.LogWarning($"[AudioManager] {soundName} grubu içinde null clip!");
+            Debug.LogWarning($"[AudioManager] Null clip in the {soundName} group!");
             return;
         }
 
-        // Pitch'e hafif rastgelelik ekle (daha doğal ses)
+        // Add slight pitch variation for a more natural sound
         float randomPitch = 1f + Random.Range(-soundGroup.pitchVariation, soundGroup.pitchVariation);
         sfxAudioSource.pitch = randomPitch;
         sfxAudioSource.PlayOneShot(selectedClip, soundGroup.volume);
     }
 
     /// <summary>
-    /// Arka plan müzik başlat
+    /// Start background music
     /// </summary>
     public void PlayBackgroundMusic()
     {
         if (backgroundMusicList.Count == 0)
         {
-            Debug.LogWarning("[AudioManager] Arka plan müzik listesi boş!");
+            Debug.LogWarning("[AudioManager] Background music list is empty!");
             return;
         }
 
-        // Eğer zaten bir müzik çalıyorsa coroutine'i durdurma
+        // Do not restart the coroutine if music is already playing
         if (isMusicPlaying) return;
 
-        // Müzik playback coroutine'ini başlat
+        // Start the music playback coroutine
         isMusicPlaying = true;
         currentMusicIndex = 0;
         
@@ -122,18 +122,18 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Müzikleri sırayla oynat
+    /// Play music tracks in sequence
     /// </summary>
     private IEnumerator PlayMusicSequence()
     {
         while (isMusicPlaying)
         {
-            // Müzik indeksini belirle
+            // Determine the music index
             int musicIndex = randomizeMusic ? Random.Range(0, backgroundMusicList.Count) : currentMusicIndex;
             
             if (musicIndex >= backgroundMusicList.Count)
             {
-                musicIndex = 0; // Başa dön
+                musicIndex = 0; // Return to the beginning
                 currentMusicIndex = 0;
             }
 
@@ -141,33 +141,33 @@ public class AudioManager : MonoBehaviour
 
             if (musicClip.clip == null)
             {
-                Debug.LogWarning($"[AudioManager] Müzik {musicIndex} null!");
+                Debug.LogWarning($"[AudioManager] Track {musicIndex} is null!");
                 currentMusicIndex++;
                 yield return new WaitForSeconds(0.1f);
                 continue;
             }
 
-            // Müziği oynat
+            // Play the music
             musicAudioSource.clip = musicClip.clip;
             musicAudioSource.Play();
 
-            // Müziğin bitişini bekle
+            // Wait for the music to finish
             float musicDuration = musicClip.clip.length;
             yield return new WaitForSeconds(musicDuration);
 
-            // Bekleme süresini bekle
+            // Wait for the configured delay
             if (musicClip.delayBetweenTracks > 0)
             {
                 yield return new WaitForSeconds(musicClip.delayBetweenTracks);
             }
 
-            // Sonraki müziğe geç
+            // Move to the next track
             currentMusicIndex++;
         }
     }
 
     /// <summary>
-    /// Arka plan müzik durdur
+    /// Stop background music
     /// </summary>
     public void StopBackgroundMusic()
     {
@@ -182,13 +182,13 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Belirli bir müziği oynat (index ile)
+    /// Play a specific track by index
     /// </summary>
     public void PlayMusicByIndex(int index)
     {
         if (index < 0 || index >= backgroundMusicList.Count)
         {
-            Debug.LogWarning($"[AudioManager] Geçersiz müzik indeksi: {index}");
+            Debug.LogWarning($"[AudioManager] Invalid music index: {index}");
             return;
         }
 
@@ -198,7 +198,7 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Rastgele müzik modu aç/kapat
+    /// Enable or disable random music playback
     /// </summary>
     public void SetRandomizeMusic(bool randomize)
     {
@@ -206,7 +206,7 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Arka plan müzik seviyesi ayarla
+    /// Set the background music volume
     /// </summary>
     public void SetMusicVolume(float volume)
     {
@@ -214,7 +214,7 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Ses efektleri seviyesi ayarla
+    /// Set the sound effects volume
     /// </summary>
     public void SetSFXVolume(float volume)
     {

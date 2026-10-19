@@ -16,7 +16,7 @@ public class NotificationManager : MonoBehaviour
     [SerializeField] private float verticalSpacing = 10f;
     [Header("Color Set")]
     [Tooltip("Background color for success notifications (HTML hex, e.g. #2AA24A)")]
-    [SerializeField] private string successColorHex = "#287a3e";
+    [SerializeField] private string successColorHex = "#2E8B57";
 
     private List<GameObject> activeNotifications = new List<GameObject>();
 
@@ -125,7 +125,7 @@ public class NotificationManager : MonoBehaviour
         }
         else
         {
-            ShowNotification(message, duration, new Color(0.2f, 0.8f, 0.2f, 0.9f)); // Fallback color
+            ShowNotification(message, duration, new Color(0.18f, 0.55f, 0.34f, 0.9f)); // Fallback color
         }
     }
 
@@ -134,7 +134,7 @@ public class NotificationManager : MonoBehaviour
     /// </summary>
     public void ShowError(string message, float duration = 3f)
     {
-        ShowNotification(message, duration, new Color(0.9f, 0.2f, 0.2f, 0.9f)); // Red
+        ShowNotification(message, duration, new Color(0.79f, 0.30f, 0.31f, 0.9f)); // Red
     }
 
     /// <summary>

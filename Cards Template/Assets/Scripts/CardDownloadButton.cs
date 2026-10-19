@@ -3,15 +3,15 @@ using UnityEngine.UI;
 using System.Collections;
 
 /// <summary>
-/// Kartı indirme butonu
-/// Ekranda bulunan mevcut kartı otomatik olarak tespit eder ve indirir.
+/// Button for downloading a card.
+/// Automatically detects and downloads the current card on screen.
 /// </summary>
 public class CardDownloadButton : MonoBehaviour
 {
     [SerializeField] private Button downloadButton;
     [SerializeField] private string downloadFileName = "Card_";
 
-    private DragCard currentCard; // Ekrandaki mevcut kart
+    private DragCard currentCard; // Current card on screen
 
     private void Start()
     {
@@ -25,18 +25,18 @@ public class CardDownloadButton : MonoBehaviour
             downloadButton.onClick.AddListener(OnDownloadButtonClicked);
         }
 
-        // Sahnede aktif kartı bul (giriş animasyonu yaparken ekrana gelecek)
+        // Find the active card in the scene (it will appear during the entrance animation)
         UpdateCurrentCard();
     }
 
     private void Update()
     {
-        // Her frame'de mevcut kartı güncelle (kartlar değişirken)
+        // Update the current card every frame as cards change
         UpdateCurrentCard();
     }
 
     /// <summary>
-    /// Ekrandaki aktif DragCard'ı otomatik olarak tespit et
+    /// Automatically detect the active DragCard on screen
     /// </summary>
     private void UpdateCurrentCard()
     {
@@ -44,7 +44,7 @@ public class CardDownloadButton : MonoBehaviour
         
         if (allCards.Length > 0)
         {
-            // En son spawn edilen kartı al (sonuncusu aktif kart)
+            // Get the most recently spawned card (the last one is the active card)
             currentCard = allCards[allCards.Length - 1];
         }
         else
@@ -54,66 +54,66 @@ public class CardDownloadButton : MonoBehaviour
     }
 
     /// <summary>
-    /// İndirme butonuna tıklandığında çalışır
+    /// Called when the download button is clicked
     /// </summary>
     private void OnDownloadButtonClicked()
     {
         if (currentCard == null)
         {
-            Debug.LogError("[CardDownloadButton] Ekranda kart bulunamadı!");
+            Debug.LogError("[CardDownloadButton] No card found on screen!");
             if (NotificationManager.Instance != null)
-                NotificationManager.Instance.ShowError("Kart bulunamadı!");
+                NotificationManager.Instance.ShowError("Card Not Found!");
             else
-                Debug.LogWarning("[CardDownloadButton] NotificationManager yok; bildirim gösterilemedi.");
+                Debug.LogWarning("[CardDownloadButton] NotificationManager is unavailable; could not show notification.");
             return;
         }
 
-        // Mevcut kartın Image bileşenini al
+        // Get the Image component of the current card
         Image cardImage = currentCard.GetComponent<Image>();
         if (cardImage == null)
         {
-            Debug.LogError("[CardDownloadButton] Kart Image bileşeni bulunamadı!");
+            Debug.LogError("[CardDownloadButton] Card Image component not found!");
             if (NotificationManager.Instance != null)
-                NotificationManager.Instance.ShowError("Kart görseli bulunamadı!");
+                NotificationManager.Instance.ShowError("Not Found!");
             else
-                Debug.LogWarning("[CardDownloadButton] NotificationManager yok; bildirim gösterilemedi.");
+                Debug.LogWarning("[CardDownloadButton] NotificationManager is unavailable; could not show notification.");
             return;
         }
 
-        // Kartı indir
+        // Download the card
         DownloadCard(cardImage);
     }
 
     /// <summary>
-    /// Kartı indir ve dosyaya kaydet
+    /// Download the card and save it to a file
     /// </summary>
     private void DownloadCard(Image cardImage)
     {
         try
         {
-            // Kartın RectTransform'unu al
+            // Get the card's RectTransform
             RectTransform cardRect = cardImage.GetComponent<RectTransform>();
             if (cardRect == null)
             {
                 if (NotificationManager.Instance != null)
-                    NotificationManager.Instance.ShowError("Kart indirilemedi!");
+                    NotificationManager.Instance.ShowError("Could not download the card!");
                 else
-                    Debug.LogWarning("[CardDownloadButton] NotificationManager yok; bildirim gösterilemedi.");
+                    Debug.LogWarning("[CardDownloadButton] NotificationManager is unavailable; could not show notification.");
                 return;
             }
 
-            // Screenshot al
+            // Capture a screenshot
             Texture2D cardTexture = CaptureRectTransformToTexture(cardRect);
             if (cardTexture == null)
             {
                 if (NotificationManager.Instance != null)
-                    NotificationManager.Instance.ShowError("Ekran görüntüsü alınamadı!");
+                    NotificationManager.Instance.ShowError("Could not capture the screenshot!");
                 else
-                    Debug.LogWarning("[CardDownloadButton] NotificationManager yok; bildirim gösterilemedi.");
+                    Debug.LogWarning("[CardDownloadButton] NotificationManager is unavailable; could not show notification.");
                 return;
             }
 
-            // PNG olarak kaydet
+            // Save as a PNG
             byte[] pngData = cardTexture.EncodeToPNG();
             string fileName = downloadFileName + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".png";
             string filePath = System.IO.Path.Combine(Application.persistentDataPath, fileName);
@@ -121,19 +121,19 @@ public class CardDownloadButton : MonoBehaviour
             System.IO.File.WriteAllBytes(filePath, pngData);
             Destroy(cardTexture);
 
-            Debug.Log($"[CardDownloadButton] Kart indirildi: {filePath}");
+            Debug.Log($"[CardDownloadButton] Card downloaded: {filePath}");
             if (NotificationManager.Instance != null)
-                NotificationManager.Instance.ShowSuccess($" Kart kaydedildi ");
+                NotificationManager.Instance.ShowSuccess("Card Saved.");
             else
-                Debug.LogWarning("[CardDownloadButton] NotificationManager yok; başarılı bildirim gösterilemedi.");
+                Debug.LogWarning("[CardDownloadButton] NotificationManager is unavailable; could not show success notification.");
         }
         catch (System.Exception ex)
         {
-            Debug.LogError($"[CardDownloadButton] İndirme hatası: {ex.Message}");
+            Debug.LogError($"[CardDownloadButton] Download error: {ex.Message}");
             if (NotificationManager.Instance != null)
-                NotificationManager.Instance.ShowError("İndirme başarısız oldu!");
+                NotificationManager.Instance.ShowError("Download failed!");
             else
-                Debug.LogWarning("[CardDownloadButton] NotificationManager yok; hata bildirimi gösterilemedi.");
+                Debug.LogWarning("[CardDownloadButton] NotificationManager is unavailable; could not show error notification.");
         }
 
         #if UNITY_ANDROID && !UNITY_EDITOR
@@ -158,20 +158,20 @@ public class CardDownloadButton : MonoBehaviour
                 );
             }
 
-            Debug.Log("[Gallery] Görsel galeriye eklendi.");
+            Debug.Log("[Gallery] Image added to gallery.");
         }
         catch (System.Exception e)
         {
-            Debug.LogError("[Gallery] Galeriye ekleme hatası: " + e.Message);
+            Debug.LogError("[Gallery] Error adding image to gallery: " + e.Message);
         }
     }
 
     /// <summary>
-    /// RectTransform'u texture olarak yakala
+    /// Capture the RectTransform as a texture
     /// </summary>
     private Texture2D CaptureRectTransformToTexture(RectTransform rect)
     {
-        // Rect boyutlarını al
+        // Get the RectTransform dimensions
         Vector2 size = rect.rect.size;
         int width = (int)size.x;
         int height = (int)size.y;
@@ -179,12 +179,12 @@ public class CardDownloadButton : MonoBehaviour
         if (width <= 0 || height <= 0)
             return null;
 
-        // RenderTexture oluştur
+        // Create a RenderTexture
         RenderTexture renderTexture = new RenderTexture(width, height, 24);
         Graphics.SetRenderTarget(renderTexture);
         GL.Clear(true, true, Color.clear);
 
-        // Canvas'ı render et
+        // Render the Canvas
         Canvas canvas = rect.GetComponentInParent<Canvas>();
         if (canvas != null && canvas.worldCamera != null)
         {
@@ -193,7 +193,7 @@ public class CardDownloadButton : MonoBehaviour
             canvas.worldCamera.targetTexture = null;
         }
 
-        // RenderTexture'ı Texture2D'ye dönüştür
+        // Convert the RenderTexture to a Texture2D
         RenderTexture.active = renderTexture;
         Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
         texture.ReadPixels(new Rect(0, 0, width, height), 0, 0);

@@ -4,8 +4,8 @@ using TMPro;
 using System.Collections;
 
 /// <summary>
-/// Tek bir Toast Notification gösterimi
-/// Prefab olarak kullanılacak
+/// Displays a single toast notification.
+/// Intended to be used as a prefab.
 /// </summary>
 public class ToastNotification : MonoBehaviour
 {
@@ -27,23 +27,23 @@ public class ToastNotification : MonoBehaviour
     }
 
     /// <summary>
-    /// Bildirimi başlat
+    /// Initialize the notification.
     /// </summary>
     public void Initialize(string message, float displayDuration, Color? backgroundColor = null)
     {
         if (messageText != null)
             messageText.text = message;
         else
-            Debug.LogWarning("[ToastNotification] messageText atanmadı.");
+            Debug.LogWarning("[ToastNotification] messageText is not assigned.");
 
         if (backgroundColor.HasValue && backgroundImage != null)
             backgroundImage.color = backgroundColor.Value;
         else if (backgroundImage == null)
-            Debug.LogWarning("[ToastNotification] backgroundImage atanmadı.");
+            Debug.LogWarning("[ToastNotification] backgroundImage is not assigned.");
 
         // Fade in
         canvasGroup.alpha = 0f;
-        // Pozisyonu sıfırla ki prefab pozisyonu karışmasın
+        // Reset the position to avoid inheriting the prefab's position.
         if (rt != null)
             rt.anchoredPosition = Vector2.zero;
         StartCoroutine(FadeInAndOut(displayDuration));
@@ -51,7 +51,7 @@ public class ToastNotification : MonoBehaviour
 
     private IEnumerator FadeInAndOut(float displayDuration)
     {
-        // Fade in (0.3 saniye)
+        // Fade in (0.3 seconds)
         float fadeInDuration = 0.3f;
         float elapsed = 0f;
 
@@ -64,10 +64,10 @@ public class ToastNotification : MonoBehaviour
 
         canvasGroup.alpha = 1f;
 
-        // Ekranda kalma süresi
+        // Time to remain on screen
         yield return new WaitForSeconds(displayDuration - fadeInDuration);
 
-        // Fade out + yukarı hareket
+        // Fade out and move upward
         elapsed = 0f;
         Vector2 startPos = rt.anchoredPosition;
         Vector2 endPos = startPos + new Vector2(0, moveUpDistance);
