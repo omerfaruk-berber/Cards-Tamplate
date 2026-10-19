@@ -2,6 +2,10 @@
 
 This project is a modular and extensible ready-made game template designed to be adapted to different game genres. It offers a flexible framework that can be used for both story-driven experiences and classic board games.
 
+[![GitHub Release](https://img.shields.io/github/v/release/omerfaruk-berber/Cards-Tamplate?label=release)](https://github.com/omerfaruk-berber/Cards-Tamplate/releases)
+![Last Commit](https://img.shields.io/github/last-commit/omerfaruk-berber/Cards-Tamplate)
+[![GitHub License](https://img.shields.io/github/license/omerfaruk-berber/Cards-Tamplate)](https://github.com/omerfaruk-berber/Cards-Tamplate/blob/main/LICENSE)
+
 ## 🛠️ Contents
 
 The template includes the following core systems:
