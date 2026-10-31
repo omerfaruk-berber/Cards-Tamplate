@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cfad8ef0b5f68ac46bd02b3156b377a4
+guid: 253573b372119ff409ea14bbad42a639
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -128,10 +128,3 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 199010
-  packageName: Dark Theme UI
-  packageVersion: 1.1
-  assetPath: Assets/Dark UI/Free/Heart.png
-  uploadId: 761092

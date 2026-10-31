@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c0d66557e6e886446b2af17220906a63
+guid: 426dde7873c0bc14aa5d96f429884736
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -128,10 +128,3 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 199010
-  packageName: Dark Theme UI
-  packageVersion: 1.1
-  assetPath: Assets/Dark UI/Free/Info.png
-  uploadId: 761092
