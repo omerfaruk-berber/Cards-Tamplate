@@ -38,6 +38,7 @@ public class AudioManager : MonoBehaviour
     private bool isMusicPlaying = false;
     private int currentMusicIndex = 0;
     private Coroutine musicPlaybackCoroutine;
+    private bool useSelectedTrack;
 
     private void Awake()
     {
@@ -113,7 +114,6 @@ public class AudioManager : MonoBehaviour
 
         // Start the music playback coroutine
         isMusicPlaying = true;
-        currentMusicIndex = 0;
         
         if (musicPlaybackCoroutine != null)
             StopCoroutine(musicPlaybackCoroutine);
@@ -129,7 +129,9 @@ public class AudioManager : MonoBehaviour
         while (isMusicPlaying)
         {
             // Determine the music index
-            int musicIndex = randomizeMusic ? Random.Range(0, backgroundMusicList.Count) : currentMusicIndex;
+            int musicIndex = useSelectedTrack ? currentMusicIndex :
+                (randomizeMusic ? Random.Range(0, backgroundMusicList.Count) : currentMusicIndex);
+            useSelectedTrack = false;
             
             if (musicIndex >= backgroundMusicList.Count)
             {
@@ -194,6 +196,7 @@ public class AudioManager : MonoBehaviour
 
         StopBackgroundMusic();
         currentMusicIndex = index;
+        useSelectedTrack = true;
         PlayBackgroundMusic();
     }
 

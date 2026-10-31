@@ -1,0 +1,5 @@
+{
+  "name": "Cards.Data.Editor",
+  "references": ["Cards.Data"],
+  "includePlatforms": ["Editor"]
+}

@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514f46c5610c47ffa9ed71f4c8207545, type: 3}
+  m_Name: CardDataset
+  m_EditorClassIdentifier: Cards.Data::CardDataset
+  viewPrefab: {fileID: 702304983616893190, guid: 1a44c62a85aeba54ca88b352ea22a4aa, type: 3}
+  schemaVersion: 2
+  displayName: Yeni veri seti
+  flowMode: 0
+  cards:
+  - id: 92a18fe3023b49a9a328d9c3f3035c2a
+    role: 1
+    cheatId: 0
+    title: Cards
+    description: Tap And Slide
+    artwork: {fileID: 0}
+    yes:
+      label: Evet
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "Hay\u0131r"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: bf4df61be3b543a1a4dd18bc5347563e
+    role: 0
+    cheatId: 0
+    title: Yeni kart
+    description: dsfsdfsasf<fsdf
+    artwork: {fileID: 0}
+    yes:
+      label: Yes
+      defaultTarget:
+        type: 1
+        cardId: 
+      rules: []
+    no:
+      label: No
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: 073e6244b06548b3b6527e2ed025dbf0
+    role: 0
+    cheatId: 0
+    title: Yeni kart (Kopya)
+    description: dsfsdfsasf<fsdf
+    artwork: {fileID: 0}
+    yes:
+      label: Yes
+      defaultTarget:
+        type: 1
+        cardId: 
+      rules: []
+    no:
+      label: No
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: 4766ce9a2ca245b190683a308d181be0
+    role: 0
+    cheatId: 0
+    title: Yeni kart (Kopya) (Kopya)
+    description: dsfsdfsasf<fsdf
+    artwork: {fileID: 0}
+    yes:
+      label: Yes
+      defaultTarget:
+        type: 1
+        cardId: 
+      rules: []
+    no:
+      label: No
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: 0d7f7ad3a5134dd7b0c6fe25d6b7e318
+    role: 2
+    cheatId: 0
+    title: End
+    description: 
+    artwork: {fileID: 0}
+    yes:
+      label: Evet
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "Hay\u0131r"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: 6c0535cf0eb740d7a680635a98016a94
+    role: 3
+    cheatId: 0
+    title: Options
+    description: 
+    artwork: {fileID: 0}
+    yes:
+      label: Evet
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "Hay\u0131r"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []

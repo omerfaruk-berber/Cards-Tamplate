@@ -1,0 +1,6 @@
+{
+  "name": "Cards.EditMode.Tests",
+  "references": ["Cards.Data", "Cards.Data.Editor"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

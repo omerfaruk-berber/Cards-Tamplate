@@ -1,0 +1,16 @@
+# This Unity project is nested beneath the repository root.
+/[Ll]ibrary/
+/[Tt]emp/
+/[Ll]ogs/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Uu]ser[Ss]ettings/
+/.utmp/
+/MemoryCaptures/
+/Recordings/
+*.csproj
+*.sln
+*.slnx
+*.apk
+*.aab

@@ -8,7 +8,6 @@ using TMPro;
 public class TimeDisplay : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI timeText;
-    [SerializeField] private string timeFormat = "{0:HH:mm:ss}"; // Saat:Dakika:Saniye
     [SerializeField] private bool show24Hour = true; // true = 24 saat, false = 12 saat (AM/PM)
     
     [Header("Oyun İçi Süre Ayarları")]
@@ -41,15 +40,13 @@ public class TimeDisplay : MonoBehaviour
 
     private void Update()
     {
+        totalPlayTime += Time.deltaTime;
         if (timeText == null) return;
 
         if (showPlayTime)
         {
             // Oyun süresini güncelle
-            totalPlayTime += Time.deltaTime;
             UpdatePlayTimeDisplay();
-            PlayerPrefs.SetInt(TimeDisplayModeKey, 1); // 1 = Oyun süresi
-            PlayerPrefs.Save();
         }
         else
         {
@@ -67,8 +64,6 @@ public class TimeDisplay : MonoBehaviour
                 timeText.text = now.ToString("hh:mm:ss tt");
             }
 
-            PlayerPrefs.SetInt(TimeDisplayModeKey, 0); // 0 = Sistem saati
-            PlayerPrefs.Save();
         }
     }
 
@@ -134,6 +129,7 @@ public class TimeDisplay : MonoBehaviour
     // Oyun süresini PlayerPrefs'e kaydeder
     private void SavePlayTime()
     {
+        PlayerPrefs.SetInt(TimeDisplayModeKey, showPlayTime ? 1 : 0);
         PlayerPrefs.SetFloat(PLAYTIME_SAVE_KEY, totalPlayTime);
         PlayerPrefs.Save();
     }
@@ -173,7 +169,10 @@ public class TimeDisplay : MonoBehaviour
     // Sistem saati ile oyun süresi arasında geçiş yapar
     public void TogglePlayTime(bool showPlay)
     {
+        if (showPlayTime == showPlay) return;
         showPlayTime = showPlay;
+        PlayerPrefs.SetInt(TimeDisplayModeKey, showPlay ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
  

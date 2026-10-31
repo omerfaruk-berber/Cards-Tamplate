@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514f46c5610c47ffa9ed71f4c8207545, type: 3}
+  m_Name: Default Sequential
+  m_EditorClassIdentifier: Cards.Data::CardDataset
+  viewPrefab: {fileID: 702304983616893190, guid: 1a44c62a85aeba54ca88b352ea22a4aa, type: 3}
+  schemaVersion: 2
+  displayName: Default Sequential
+  flowMode: 0
+  cards:
+  - id: 0901d37cb6564d6faa189b4aa154526c
+    role: 1
+    cheatId: 0
+    title: Cards
+    description: Tap And Slide
+    artwork: {fileID: 0}
+    yes:
+      label: Evet
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "Hay\u0131r"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: 10000000000000000000000000000001
+    role: 0
+    cheatId: 0
+    title: Card 1
+    description: 
+    artwork: {fileID: 0}
+    yes:
+      label: Evet
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "Hay\u0131r"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: b1424d6058764281af02ddfbeb456157
+    role: 0
+    cheatId: 0
+    title: Card 2
+    description: Card 2
+    artwork: {fileID: 0}
+    yes:
+      label: Evet
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "Hay\u0131r"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: d4e51c5605ab4562b7d400f53a34aabc
+    role: 2
+    cheatId: 0
+    title: End
+    description: 
+    artwork: {fileID: 0}
+    yes:
+      label: Evet
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "Hay\u0131r"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: d8affd9c87a34a12ae31ba64aaeea538
+    role: 3
+    cheatId: 0
+    title: Options
+    description: 
+    artwork: {fileID: 0}
+    yes:
+      label: Evet
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "Hay\u0131r"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []

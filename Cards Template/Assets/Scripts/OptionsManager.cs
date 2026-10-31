@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class OptionsManager : MonoBehaviour
 {
@@ -8,11 +6,10 @@ public class OptionsManager : MonoBehaviour
 
     private const string TimeDisplayModeKey = "TimeDisplayMode";
 
-    [System.Obsolete]
     private void Awake()
     {
         // Sahnede TimeDisplay componentini otomatik bulur
-        timeDisplay = FindObjectOfType<TimeDisplay>();
+        timeDisplay = FindFirstObjectByType<TimeDisplay>();
 
         if (timeDisplay == null)
         {
@@ -31,9 +28,6 @@ public class OptionsManager : MonoBehaviour
         bool showPlayTime = (index == 1);
         timeDisplay.TogglePlayTime(showPlayTime);
 
-        // Kaydet
-        PlayerPrefs.SetInt(TimeDisplayModeKey, index);
-        PlayerPrefs.Save();
     }
 
     private void LoadDisplayMode() // Kaydedilen modu yükler

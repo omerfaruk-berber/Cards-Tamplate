@@ -1,181 +1,271 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Cheat card data - contains an ID and a prefab
-/// </summary>
-[System.Serializable]
-public class CheatCard
-{
-    public int cheatId;
-    public GameObject cardPrefab;
-}
-
+/// <summary>All card roles are records in one dataset and use the same view factory.</summary>
 public class CardGameController : MonoBehaviour
 {
-    [Header("Card Prefabs")]
-    public GameObject startCardPrefab;
-    public List<GameObject> anaCardPrefabs = new List<GameObject>();
-    public GameObject endCardPrefab;
-
-    [Header("Special Cards")]
-    public GameObject optionsCardPrefab; // Options (pause) card - single prefab
-    public List<CheatCard> cheatCardPrefabs = new List<CheatCard>(); // Cheat cards - numbered list
-
-    [Header("Settings")]
+    public CardDataset dataset;
     public RectTransform spawnPoint;
 
-    private Stack<GameObject> cardStack = new Stack<GameObject>();
-    private int currentAnaCardIndex = 0;
-    private bool gameStarted = false;
+    public DragCard CurrentCard { get; private set; }
+    public CardSession Session { get; private set; }
+    public event Action<DragCard> CurrentCardChanged;
+    public event Action GameCompleted;
 
-    void Start()
+    private readonly List<CardView> pool = new List<CardView>(2);
+    private CardView baseView;
+    private CardView overlayView;
+    private GameObject poolTemplate;
+    private Transform inactiveStorage;
+    private bool initialized;
+    private bool completionReported;
+    private bool loading;
+    private bool destroying;
+    private int generation;
+    private RectTransform poolParent;
+
+    private void Start()
     {
-        if (spawnPoint == null)
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayBackgroundMusic();
+        if (!initialized) LoadDataset(dataset);
+    }
+
+    public bool LoadDataset(CardDataset nextDataset)
+    {
+        if (loading || destroying) return false;
+        var validation = CardDatasetValidator.Validate(nextDataset);
+        if (!validation.IsValid)
         {
-            Debug.LogError("Spawn Point is not assigned!");
+            Debug.LogError("[Cards] " + string.Join("\n", validation.Errors), this);
+            return false;
+        }
+        var template = nextDataset.viewPrefab != null ? nextDataset.viewPrefab.GetComponent<CardView>() : null;
+        if (spawnPoint == null || spawnPoint.GetComponentInParent<Canvas>() == null || template == null)
+        {
+            Debug.LogError("[Cards] Canvas altında Spawn Point ve CardView içeren ortak görünüm atanmalı.", this);
+            return false;
+        }
+        var presentationErrors = template.ValidateConfiguration(nextDataset);
+        if (presentationErrors.Count > 0)
+        {
+            Debug.LogError("[Cards] " + string.Join("\n", presentationErrors), this);
+            return false;
+        }
+        CardSession nextSession;
+        var prepared = new List<CardView>(2);
+        Transform preparedStorage = null;
+        bool replacePool = poolTemplate != nextDataset.viewPrefab || poolParent != spawnPoint ||
+            pool.Count != 2 || pool.Exists(view => view == null);
+        loading = true;
+        try
+        {
+            nextSession = new CardSession(nextDataset);
+            if (replacePool)
+            {
+                var storage = new GameObject("Inactive Card Storage", typeof(RectTransform));
+                storage.SetActive(false);
+                storage.transform.SetParent(spawnPoint, false);
+                preparedStorage = storage.transform;
+                for (int i = 0; i < 2; i++)
+                    prepared.Add(CreateView(nextDataset.viewPrefab, preparedStorage, "Card View " + (i + 1)));
+                prepared[0].Bind(nextSession.StartCard ?? nextSession.Current);
+            }
+        }
+        catch (Exception error)
+        {
+            foreach (var view in prepared) DisposeView(view);
+            if (preparedStorage != null) Destroy(preparedStorage.gameObject);
+            loading = false;
+            Debug.LogError("[Cards] Veri seti hazırlanamadı: " + error.Message, this);
+            return false;
+        }
+        generation++;
+        ClearDisplay();
+        if (replacePool)
+        {
+            DisposeViews();
+            if (inactiveStorage != null) Destroy(inactiveStorage.gameObject);
+            inactiveStorage = preparedStorage;
+            pool.AddRange(prepared);
+            poolTemplate = nextDataset.viewPrefab;
+            poolParent = spawnPoint;
+        }
+        dataset = nextDataset;
+        Session = nextSession;
+        completionReported = false;
+        initialized = true;
+        loading = false;
+        foreach (string warning in validation.Warnings) Debug.LogWarning("[Cards] " + warning, this);
+        ShowMain(Session.StartCard ?? Session.Current);
+        return true;
+    }
+
+    public void RestartGame() => LoadDataset(dataset);
+
+    private CardView CreateView(GameObject template, Transform storage, string viewName)
+    {
+        // Instantiate under an inactive parent so no role controls run before the record is bound.
+        var instance = Instantiate(template, storage, false);
+        instance.SetActive(false);
+        instance.name = viewName;
+        ((RectTransform)instance.transform).anchoredPosition = Vector2.zero;
+        var view = instance.GetComponent<CardView>();
+        view.Drag.Swiped += HandleSwipe;
+        view.Drag.ExitCompleted += HandleExit;
+        return view;
+    }
+
+    private CardView CreateView(string viewName) => CreateView(poolTemplate, inactiveStorage, viewName);
+
+    private void ShowMain(CardEntry entry)
+    {
+        if (entry == null)
+        {
+            baseView = null;
+            SetCurrent(null);
             return;
         }
-        // Start background music
-        if (AudioManager.Instance != null)
-            AudioManager.Instance.PlayBackgroundMusic();
-
-        // Show the start card
-        if (startCardPrefab != null)
-        {
-            SpawnCardOfType(startCardPrefab, CardType.StartGame);
-        }
-        else
-        {
-            Debug.LogWarning("Start card prefab is not assigned!");
-        }
+        var view = pool.Find(candidate => !candidate.gameObject.activeSelf);
+        if (view == null) throw new InvalidOperationException("Card pool is busy.");
+        Activate(view, entry);
+        baseView = view;
+        RefreshInput();
+        SetCurrent(view);
     }
 
-    private void SpawnCardOfType(GameObject prefab, CardType cardType)
+    private void Activate(CardView view, CardEntry entry)
     {
-        if (prefab == null) return;
-
-        GameObject cardObj = Instantiate(prefab, spawnPoint, false);
-        RectTransform rectTransform = cardObj.GetComponent<RectTransform>();
-        
-        if (rectTransform != null)
-        {
-            rectTransform.anchoredPosition = Vector2.zero;
-            rectTransform.localRotation = Quaternion.identity;
-        }
-
-        DragCard dragCard = cardObj.GetComponent<DragCard>();
-        if (dragCard != null)
-        {
-            dragCard.cardType = cardType;
-            // Clear existing listeners
-            dragCard.onYes.RemoveAllListeners();
-            dragCard.onNo.RemoveAllListeners();
-            // Add the new listeners
-            dragCard.onYes.AddListener(() => OnCardSwiped(cardType, true));
-            dragCard.onNo.AddListener(() => OnCardSwiped(cardType, false));
-        }
-
-        cardStack.Push(cardObj);
+        view.Clear();
+        view.Bind(entry);
+        view.transform.SetParent(spawnPoint, false);
+        view.transform.SetAsLastSibling();
+        view.gameObject.SetActive(true);
     }
 
-    private void OnCardSwiped(CardType cardType, bool isYes)
+    private void HandleSwipe(DragCard source, bool yes)
     {
-        Debug.Log($"Card swiped: {cardType} - Direction: {(isYes ? "RIGHT (Yes)" : "LEFT (No)")}");
-
-        switch (cardType)
+        if (source != CurrentCard) return;
+        var view = source.GetComponent<CardView>();
+        if (view == overlayView)
         {
-            case CardType.StartGame:
-                // The start card should only be triggered once
-                if (!gameStarted && isYes)
-                {
-                    gameStarted = true;
-                    
-                    Debug.Log("Play card accepted - UI updated");
-                    ShowNextAnaCard();
-                }
-                break;
-
-            case CardType.AnaCard:
-                ShowNextAnaCard();
-                break;
-
-            case CardType.Pause:
-                Debug.Log("Pause card swiped!");
-                break;
-
-            case CardType.Cheat:
-                Debug.Log("Cheat card used!");
-                break;
-
-            case CardType.EndGame:
-                Debug.Log("Game over!");
-                break;
-
-            default:
-                break;
+            SetCurrent(null);
+            return;
+        }
+        if (view.Entry.role == CardRole.Start) ShowMain(Session.Current);
+        else if (view.Entry.role == CardRole.Normal)
+        {
+            Session.Choose(yes ? CardAnswer.Yes : CardAnswer.No);
+            bool reportCompletion = Session.IsFinished && !completionReported;
+            if (reportCompletion) completionReported = true;
+            ShowMain(Session.Current ?? Session.EndCard);
+            // A display listener may already have loaded a new session. This completion
+            // belongs to the session that accepted the answer, independently of that load.
+            if (reportCompletion) GameCompleted?.Invoke();
         }
     }
 
-    private void ShowNextAnaCard()
+    private void HandleExit(DragCard source)
     {
-        if (currentAnaCardIndex < anaCardPrefabs.Count)
+        int version = generation;
+        var view = source.GetComponent<CardView>();
+        view.gameObject.SetActive(false);
+        view.Clear();
+        if (view == overlayView)
         {
-            GameObject cardPrefab = anaCardPrefabs[currentAnaCardIndex];
-            SpawnCardOfType(cardPrefab, CardType.AnaCard);
-            currentAnaCardIndex++;
+            if (baseView != null) baseView.Drag.SetVisible(true);
+            SetCurrent(baseView);
         }
-        else
-        {
-            // All cards have been shown
-            if (endCardPrefab != null)
-            {
-                SpawnCardOfType(endCardPrefab, CardType.EndGame);
-            }
-            else
-            {
-                Debug.Log("Game over! The end card prefab is not assigned.");
-            }
-        }
+        if (version == generation) RefreshInput();
     }
 
-    // Spawn the options card
+    private bool HasExitingView()
+    {
+        foreach (var view in pool) if (view != null && view.Drag.IsExiting) return true;
+        return overlayView != null && overlayView.Drag.IsExiting;
+    }
+
+    private void RefreshInput()
+    {
+        if (baseView != null)
+            baseView.Drag.SetInteraction((overlayView == null || !overlayView.gameObject.activeSelf) && !HasExitingView());
+    }
+
+    private void SetCurrent(CardView view)
+    {
+        CurrentCard = view != null ? view.Drag : null;
+        CurrentCardChanged?.Invoke(CurrentCard);
+    }
+
     public void SpawnOptionsCard()
     {
-        Debug.Log("SpawnOptionsCard called");
-        if (optionsCardPrefab != null)
+        if (Session?.SettingsCard == null)
         {
-            SpawnCardOfType(optionsCardPrefab, CardType.Pause);
-        }
-        else
-        {
-            Debug.LogWarning("SpawnOptionsCard: Options card prefab is not assigned!");
-        }
-    }
-
-    // Spawn a cheat card selected by ID
-    public void SpawnCheatCard(int cheatId)
-    {
-        Debug.Log($"SpawnCheatCard called with ID: {cheatId}");
-        
-        if (cheatCardPrefabs == null)
-        {
-            Debug.LogWarning("SpawnCheatCard: Cheat card list is not assigned!");
+            Debug.LogWarning("[Cards] Veri setinde Settings türünde kart bulunamadı.", this);
             return;
         }
-
-        CheatCard selectedCheat = cheatCardPrefabs.Find(c => c != null && c.cheatId == cheatId);
-        
-        if (selectedCheat != null && selectedCheat.cardPrefab != null)
-        {
-            SpawnCardOfType(selectedCheat.cardPrefab, CardType.Cheat);
-            Debug.Log($"Cheat card #{cheatId} spawned");
-        }
-        else
-        {
-            Debug.LogWarning($"SpawnCheatCard: Cheat card with ID #{cheatId} was not found!");
-        }
+        ShowOverlay(Session.SettingsCard);
     }
 
+    public void SpawnCheatCard(int cheatId)
+    {
+        var entry = Session?.GetCheatCard(cheatId);
+        if (entry == null)
+        {
+            Debug.LogWarning("[Cards] Veri setinde hile kartı bulunamadı: " + cheatId, this);
+            return;
+        }
+        ShowOverlay(entry);
+    }
 
+    private void ShowOverlay(CardEntry entry)
+    {
+        if (baseView == null || !baseView.Drag.IsReady || HasExitingView() ||
+            (overlayView != null && overlayView.gameObject.activeSelf)) return;
+        if (overlayView == null) overlayView = CreateView("Overlay Card View");
+        baseView.Drag.SetVisible(false);
+        baseView.Drag.SetInteraction(false);
+        Activate(overlayView, entry);
+        SetCurrent(overlayView);
+    }
+
+    private void ClearDisplay()
+    {
+        CurrentCard = null;
+        baseView = null;
+        foreach (var view in pool) Deactivate(view);
+        Deactivate(overlayView);
+    }
+
+    private static void Deactivate(CardView view)
+    {
+        if (view == null) return;
+        view.gameObject.SetActive(false);
+        view.Clear();
+    }
+
+    private void DisposeViews()
+    {
+        foreach (var view in pool) DisposeView(view);
+        pool.Clear();
+        DisposeView(overlayView);
+        overlayView = null;
+    }
+
+    private void DisposeView(CardView view)
+    {
+        if (view == null) return;
+        view.Drag.Swiped -= HandleSwipe;
+        view.Drag.ExitCompleted -= HandleExit;
+        Destroy(view.gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        destroying = true;
+        generation++;
+        ClearDisplay();
+        DisposeViews();
+        if (inactiveStorage != null) Destroy(inactiveStorage.gameObject);
+    }
 }

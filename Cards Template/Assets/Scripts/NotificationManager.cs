@@ -30,7 +30,11 @@ public class NotificationManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        EnsureContainer();
+    }
 
+    private void EnsureContainer()
+    {
         // If no container is assigned, find a Canvas and create a notification container
         if (notificationContainer == null)
         {
@@ -72,6 +76,8 @@ public class NotificationManager : MonoBehaviour
     /// </summary>
     public void ShowNotification(string message, float duration = 3f, Color? backgroundColor = null)
     {
+        EnsureContainer();
+        activeNotifications.RemoveAll(item => item == null);
         if (toastNotificationPrefab == null)
         {
             Debug.LogError("[NotificationManager] Toast notification prefab is not assigned!");

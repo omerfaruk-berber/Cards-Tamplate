@@ -1,0 +1,192 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514f46c5610c47ffa9ed71f4c8207545, type: 3}
+  m_Name: Butterfly Example
+  m_EditorClassIdentifier: Cards.Data::CardDataset
+  viewPrefab: {fileID: 702304983616893190, guid: 1a44c62a85aeba54ca88b352ea22a4aa, type: 3}
+  schemaVersion: 2
+  displayName: Butterfly Example
+  flowMode: 1
+  cards:
+  - id: 59f4834a429a436ebcb2d68b403d53ef
+    role: 1
+    cheatId: 0
+    title: Cards
+    description: Tap And Slide
+    artwork: {fileID: 0}
+    yes:
+      label: Evet
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "Hay\u0131r"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: 20000000000000000000000000000001
+    role: 0
+    cheatId: 0
+    title: "Yard\u0131m eli"
+    description: "Yolda yard\u0131ma ihtiyac\u0131 olan biriyle kar\u015F\u0131la\u015Ft\u0131n.
+      Ona yard\u0131m edecek misin?"
+    artwork: {fileID: 0}
+    yes:
+      label: "Yard\u0131m et"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: Devam et
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: 20000000000000000000000000000002
+    role: 0
+    cheatId: 0
+    title: Yolculuk
+    description: "Yoluna devam ediyorsun. Bir \xF6nceki se\xE7imin oturum belle\u011Finde
+      saklan\u0131yor."
+    artwork: {fileID: 0}
+    yes:
+      label: "\u0130lerle"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "\u0130lerle"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: 20000000000000000000000000000003
+    role: 0
+    cheatId: 0
+    title: "Kap\u0131daki yabanc\u0131"
+    description: "Birka\xE7 ad\u0131m \xF6nceki karar\u0131n \u015Fimdi yolunu de\u011Fi\u015Ftirecek.
+      \u0130ki se\xE7enek de ge\xE7mi\u015F karar\u0131n\u0131 kontrol eder."
+    artwork: {fileID: 0}
+    yes:
+      label: "Kap\u0131y\u0131 a\xE7"
+      defaultTarget:
+        type: 2
+        cardId: 
+      rules:
+      - conditions:
+        - cardId: 20000000000000000000000000000001
+          answer: 2
+        target:
+          type: 1
+          cardId: 20000000000000000000000000000004
+      - conditions:
+        - cardId: 20000000000000000000000000000001
+          answer: 1
+        target:
+          type: 1
+          cardId: 20000000000000000000000000000005
+    no:
+      label: Seslen
+      defaultTarget:
+        type: 2
+        cardId: 
+      rules:
+      - conditions:
+        - cardId: 20000000000000000000000000000001
+          answer: 2
+        target:
+          type: 1
+          cardId: 20000000000000000000000000000004
+      - conditions:
+        - cardId: 20000000000000000000000000000001
+          answer: 1
+        target:
+          type: 1
+          cardId: 20000000000000000000000000000005
+  - id: 20000000000000000000000000000004
+    role: 0
+    cheatId: 0
+    title: Destek geldi
+    description: "Yard\u0131m etti\u011Fin ki\u015Fi seni tan\u0131d\u0131 ve sana
+      destek oldu. \u0130lk karttaki evet cevab\u0131 bu sonuca y\xF6nlendirdi."
+    artwork: {fileID: 0}
+    yes:
+      label: Bitir
+      defaultTarget:
+        type: 2
+        cardId: 
+      rules: []
+    no:
+      label: Bitir
+      defaultTarget:
+        type: 2
+        cardId: 
+      rules: []
+  - id: 20000000000000000000000000000005
+    role: 0
+    cheatId: 0
+    title: "Yaln\u0131z yolculuk"
+    description: "Yabanc\u0131 seni tan\u0131m\u0131yor. Yoluna tek ba\u015F\u0131na
+      devam ediyorsun. \u0130lk karttaki hay\u0131r cevab\u0131 bu sonuca y\xF6nlendirdi."
+    artwork: {fileID: 0}
+    yes:
+      label: Bitir
+      defaultTarget:
+        type: 2
+        cardId: 
+      rules: []
+    no:
+      label: Bitir
+      defaultTarget:
+        type: 2
+        cardId: 
+      rules: []
+  - id: 40006f6dfe60461e8fb1ab3e3e8b576e
+    role: 2
+    cheatId: 0
+    title: End
+    description: 
+    artwork: {fileID: 0}
+    yes:
+      label: Evet
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "Hay\u0131r"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+  - id: e153e010c4094c278ed07bf603fa7a33
+    role: 3
+    cheatId: 0
+    title: Options
+    description: 
+    artwork: {fileID: 0}
+    yes:
+      label: Evet
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []
+    no:
+      label: "Hay\u0131r"
+      defaultTarget:
+        type: 0
+        cardId: 
+      rules: []

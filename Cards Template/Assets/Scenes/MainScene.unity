@@ -1181,6 +1181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardDownloadButton
   downloadButton: {fileID: 1104028683}
   downloadFileName: Card_
+  controller: {fileID: 1875325701}
 --- !u!1 &1239428180
 GameObject:
   m_ObjectHideFlags: 0
@@ -1551,12 +1552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c761704c6666a84db65ad868396f0e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardGameController
-  startCardPrefab: {fileID: 702304983616893190, guid: 94d8ecf0b279efa4792b90b3a9d43f1f, type: 3}
-  anaCardPrefabs:
-  - {fileID: 702304983616893190, guid: 1a44c62a85aeba54ca88b352ea22a4aa, type: 3}
-  endCardPrefab: {fileID: 702304983616893190, guid: 6a8171d828016b444bed1c89a4438cbb, type: 3}
-  optionsCardPrefab: {fileID: 702304983616893190, guid: 68c23d35679cfb440845e118d49b996f, type: 3}
-  cheatCardPrefabs: []
+  dataset: {fileID: 11400000, guid: 8a529aaf4fa4457da523ad5a5f779c51, type: 2}
   spawnPoint: {fileID: 480593062}
 --- !u!4 &1875325702
 Transform:
@@ -1586,7 +1582,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimeDisplay
   timeText: {fileID: 1781076411}
-  timeFormat: '{0:HH:mm:ss}'
   show24Hour: 1
   showPlayTime: 1
   playTimeFormat: 0

@@ -1,0 +1,5 @@
+{
+  "name": "Cards.PlayMode.Tests",
+  "references": ["Cards.Data", "UnityEngine.UI", "Unity.TextMeshPro"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}
