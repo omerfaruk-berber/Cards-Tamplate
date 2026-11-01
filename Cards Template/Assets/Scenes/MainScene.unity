@@ -716,6 +716,7 @@ GameObject:
   - component: {fileID: 828959055}
   - component: {fileID: 828959054}
   - component: {fileID: 828959053}
+  - component: {fileID: 828959057}
   m_Layer: 5
   m_Name: Options Button
   m_TagString: Untagged
@@ -849,6 +850,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 828959051}
   m_CullTransparentMesh: 1
+--- !u!114 &828959057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828959051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EffectDistance: {x: 3, y: -3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &903383411
 GameObject:
   m_ObjectHideFlags: 0
@@ -1058,6 +1074,7 @@ GameObject:
   - component: {fileID: 1104028684}
   - component: {fileID: 1104028686}
   - component: {fileID: 1104028683}
+  - component: {fileID: 1104028687}
   m_Layer: 5
   m_Name: Dowland Button
   m_TagString: Untagged
@@ -1182,6 +1199,21 @@ MonoBehaviour:
   downloadButton: {fileID: 1104028683}
   downloadFileName: Card_
   controller: {fileID: 1875325701}
+--- !u!114 &1104028687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104028681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EffectDistance: {x: 3, y: -3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1239428180
 GameObject:
   m_ObjectHideFlags: 0
@@ -1457,6 +1489,7 @@ GameObject:
   - component: {fileID: 1873534229}
   - component: {fileID: 1873534231}
   - component: {fileID: 1873534230}
+  - component: {fileID: 1873534232}
   m_Layer: 5
   m_Name: Time Panel
   m_TagString: Untagged
@@ -1522,6 +1555,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1873534228}
   m_CullTransparentMesh: 1
+--- !u!114 &1873534232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873534228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EffectDistance: {x: 3, y: -3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1875325700
 GameObject:
   m_ObjectHideFlags: 0
