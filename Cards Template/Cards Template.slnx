@@ -1,8 +1,8 @@
 ﻿<Solution>
-  <Project Path="Cards.Data.Editor.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Cards.EditMode.Tests.csproj" />
+  <Project Path="Cards.Data.Editor.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Cards.Data.csproj" />
   <Project Path="Cards.PlayMode.Tests.csproj" />
 </Solution>
